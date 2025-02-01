@@ -1,48 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-image-carousel',
   templateUrl: './image-carousel.component.html',
   styleUrls: ['./image-carousel.component.css']
 })
-export class ImageCarouselComponent implements OnInit, OnDestroy {
+export class ImageCarouselComponent {
   images = [
-    { src: 'assets/Imagenes/imagen 1.jpg', alt: 'Image 1' },
-    { src: 'assets/Imagenes/imagen 2.jpg', alt: 'Image 2' },
+    { src: 'assets/Imagenes/michi.webp', alt: 'Imagen de un michi' },
+    { src: 'assets/Imagenes/paisaje.webp', alt: 'Hermoso paisaje' },
     // Agrega más imágenes según sea necesario
   ];
-
-  currentIndex = 0; // Muestra solo la primera imagen al principio
-  isFullscreen: boolean = false;
-  intervalId: any;
-
-  ngOnInit() {
-    // Cambiar la imagen cada 5 segundos
-    this.intervalId = setInterval(() => {
-      this.nextImage();
-    }, 5000); // 5000 milisegundos (5 segundos)
-  }
-
-  ngOnDestroy() {
-    // Detener el intervalo cuando el componente se destruya
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-  }
-
   
-
-  nextImage() {
-    this.currentIndex = (this.currentIndex + 1) % this.images.length;
-  }
+  currentIndex = 0;
+  isFullscreen = false;
 
   toggleFullscreen() {
     this.isFullscreen = !this.isFullscreen;
-    const carousel = document.querySelector('.carousel-container');
+
     if (this.isFullscreen) {
-      carousel?.classList.add('fullscreen');
+      document.documentElement.requestFullscreen();
     } else {
-      carousel?.classList.remove('fullscreen');
+      document.exitFullscreen();
     }
+  }
+
+  @HostListener('document:fullscreenchange', [])
+  onFullscreenChange() {
+    this.isFullscreen = !!document.fullscreenElement;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-image-carousel',
@@ -9,19 +9,26 @@ export class ImageCarouselComponent {
   images = [
     { src: 'assets/Imagenes/michi.webp', alt: 'Imagen de un michi' },
     { src: 'assets/Imagenes/paisaje.webp', alt: 'Hermoso paisaje' },
-    // Agrega más imágenes según sea necesario
   ];
   
   currentIndex = 0;
   isFullscreen = false;
 
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
+
   toggleFullscreen() {
     this.isFullscreen = !this.isFullscreen;
 
+    const carousel = this.el.nativeElement.querySelector('.carousel-container');
+
     if (this.isFullscreen) {
-      document.documentElement.requestFullscreen();
+      if (carousel.requestFullscreen) {
+        carousel.requestFullscreen();
+      }
     } else {
-      document.exitFullscreen();
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
     }
   }
 
